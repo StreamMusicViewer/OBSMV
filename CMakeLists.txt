@@ -97,7 +97,18 @@ else()
 endif()
 
 if(APPLE)
+    target_include_directories(obsmv PRIVATE
+        /opt/homebrew/include
+        /usr/local/include
+    )
     target_link_options(obsmv PRIVATE -undefined dynamic_lookup)
+endif()
+
+if(UNIX AND NOT APPLE)
+    target_include_directories(obsmv PRIVATE
+        /usr/include
+        /usr/local/include
+    )
 endif()
 
 set_target_properties(obsmv PROPERTIES

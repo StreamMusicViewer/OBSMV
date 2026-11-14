@@ -19,7 +19,7 @@
 
 #include "c99defs.h"
 
-#if (defined(_MSC_VER) || defined(__MINGW32__)) && ((defined(_M_X64) && !defined(_M_ARM64EC)) || defined(_M_IX86))
+#if (defined(_MSC_VER) || defined(__MINGW32__) || defined(__x86_64__) || defined(__i386__) || defined(__SSE2__)) && !defined(__aarch64__) && !defined(__arm64__)
 #include <emmintrin.h>
 #else
 #ifndef WIN32_LEAN_AND_MEAN
@@ -36,6 +36,12 @@
 
 #define SIMDE_ENABLE_NATIVE_ALIASES
 PRAGMA_WARN_PUSH
+#if defined(__has_include)
+#if __has_include(<simde/x86/sse2.h>)
 #include <simde/x86/sse2.h>
+#endif
+#else
+#include <simde/x86/sse2.h>
+#endif
 PRAGMA_WARN_POP
 #endif

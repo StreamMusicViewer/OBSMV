@@ -59,7 +59,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build gcc g++ pkg-config libdbus-1-dev
+          sudo apt-get install -y cmake ninja-build gcc g++ pkg-config libdbus-1-dev libsimde-dev || sudo apt-get install -y cmake ninja-build gcc g++ pkg-config libdbus-1-dev
 
       - name: Configure CMake
         run: |
@@ -90,12 +90,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Ninja
-        run: brew install ninja
+      - name: Set up Dependencies
+        run: brew install ninja simde
 
       - name: Configure CMake
         run: |
-          cmake -B macos/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          cmake -B macos/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DCMAKE_PREFIX_PATH="/opt/homebrew;/usr/local"
 
       - name: Build Plugin
         run: |
