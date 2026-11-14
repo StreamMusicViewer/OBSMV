@@ -1,0 +1,33 @@
+# Media Detection & OSMV Sync
+
+OBSMV offers an intelligent dual-mode media detection architecture, operating as a standalone plugin or synchronizing with the OSMV desktop companion application.
+
+---
+
+## Media Detection Modes
+
+Inside the source properties, you can choose from three detection modes:
+
+### 1. Auto / Hybrid Mode (Recommended)
+Tries native operating system media sessions first. If no native player is active or if native metadata is incomplete, it seamlessly falls back to OSMV synchronization.
+
+### 2. Native Only
+Queries native operating system APIs directly without external software:
+- **Windows**: Windows Runtime Global System Media Transport Controls (C++/WinRT GSMTC). Compatible with Spotify, Apple Music, Tidal, web browsers, and VLC.
+- **Linux**: D-Bus MPRIS 2 interface (`org.mpris.MediaPlayer2.*`).
+- **macOS**: Native AppleScript Cocoa bridge for Apple Music and Spotify.
+
+### 3. OSMV Sync Only
+Synchronizes with the standalone [OSMV](https://github.com/StreamMusicViewer/OSMV) desktop application via:
+- Local IPC pipe: `\\.\pipe\osmv-ipc-v3`
+- File synchronization: watching `current_song.json` in the OSMV shared directory.
+
+---
+
+## OSMV Synchronization Benefits
+
+Pairing OBSMV with the OSMV desktop companion app unlocks additional features:
+
+- **Discord Rich Presence Integration**: Synchronized track status shared with your Discord profile.
+- **Dynamic Text Exports**: Formatted text files for additional OBS text elements (`Time.txt`, `Countdown.txt`, `SystemInfo.txt`).
+- **Twitch Helix API**: Synchronize stream category updates with currently played games or music.

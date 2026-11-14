@@ -1,0 +1,91 @@
+import { Steps } from 'nextra/components'
+
+# Installation Guide
+
+OBSMV is distributed as pre-compiled native binaries and can also be built from source using CMake and Ninja.
+
+---
+
+## Pre-Compiled Release Packages
+
+Download the archive corresponding to your operating system from the GitHub Releases page:
+
+<Steps>
+
+### Windows (64-bit)
+
+1. Download `obsmv-v1.0.0-windows-x64.zip`.
+2. Close OBS Studio if it is currently running.
+3. Extract the ZIP archive.
+4. Run `install-windows.bat` (or `install.bat`) as Administrator, or copy files manually:
+   - Copy `obs-plugins/64bit/obsmv.dll` to `C:\Program Files\obs-studio\obs-plugins\64bit\`
+   - Copy `data/obs-plugins/obsmv/` to `C:\Program Files\obs-studio\data\obs-plugins\obsmv\`
+5. Launch OBS Studio. The plugin sources are now available under Add Source.
+
+### Linux (Ubuntu, Debian, Fedora, Arch)
+
+1. Download `obsmv-linux-x86_64.tar.gz`.
+2. Extract the archive:
+   ```bash
+   tar -xzf obsmv-linux-x86_64.tar.gz
+   ```
+3. Copy the plugin binary and data files to your OBS Studio configuration folder:
+   ```bash
+   mkdir -p ~/.config/obs-studio/plugins/obsmv/bin/64bit
+   mkdir -p ~/.config/obs-studio/plugins/obsmv/data
+   cp package/obs-plugins/obsmv.so ~/.config/obs-studio/plugins/obsmv/bin/64bit/
+   cp -r package/data/obs-plugins/obsmv/* ~/.config/obs-studio/plugins/obsmv/data/
+   ```
+4. Start OBS Studio.
+
+### macOS (Apple Silicon arm64 & Intel x86_64)
+
+1. Download `obsmv-macos-universal.tar.gz`.
+2. Open Terminal and extract the archive:
+   ```bash
+   tar -xzf obsmv-macos-universal.tar.gz
+   ```
+3. Copy the plugin binary and assets to your user OBS Studio plugins directory:
+   ```bash
+   mkdir -p "$HOME/Library/Application Support/obs-studio/plugins/obsmv/bin"
+   mkdir -p "$HOME/Library/Application Support/obs-studio/plugins/obsmv/data"
+   cp package/obs-plugins/obsmv.so "$HOME/Library/Application Support/obs-studio/plugins/obsmv/bin/"
+   cp -r package/data/obs-plugins/obsmv/* "$HOME/Library/Application Support/obs-studio/plugins/obsmv/data/"
+   ```
+4. If macOS Gatekeeper blocks the newly copied binary, remove the quarantine flag:
+   ```bash
+   xattr -cr "$HOME/Library/Application Support/obs-studio/plugins/obsmv"
+   ```
+5. Restart OBS Studio.
+
+</Steps>
+
+---
+
+## Building from Source
+
+### Windows
+Requirements:
+- Visual Studio 2022 or 2026 Build Tools (C++ Desktop development)
+- CMake 3.20+ and Ninja
+
+```bat
+windows\build.bat
+```
+
+### Linux
+Requirements:
+- `cmake`, `ninja-build`, `gcc`, `g++`, `pkg-config`, `libdbus-1-dev`, `libsimde-dev`
+
+```bash
+./linux/build.sh
+```
+
+### macOS
+Requirements:
+- Homebrew packages: `brew install cmake ninja simde`
+
+```bash
+cmake -B macos/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+cmake --build macos/build -j
+```

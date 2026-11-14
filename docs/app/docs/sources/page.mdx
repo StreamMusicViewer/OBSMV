@@ -1,0 +1,53 @@
+# OBS Sources
+
+OBSMV registers three distinct source types in OBS Studio, giving you full flexibility to display an integrated music overlay or isolate individual components across scenes.
+
+---
+
+## 1. OBSMV (Visualizer + Now Playing)
+
+**Identifier**: `obsmv_source_combined`
+
+This unified source combines both the real-time audio visualizer and the Now Playing music card into a single synchronized element:
+
+- **Integrated Layout**: Positions the visualizer either above or below the music card (`LayoutVizTop` or `LayoutVizBottom`).
+- **Adjustable Gap**: Set the exact pixel spacing between the visualizer and the card. Setting the gap to `0` allows the visualizer waveform or bars to sit flush against the card edge.
+- **Independent Visibility**: Toggle the visualizer or card independently while retaining a single scene source.
+- **Unified Color Palette**: Both components share dynamic colors extracted from the active album cover.
+
+---
+
+## 2. OBSMV Visualizer
+
+**Identifier**: `obsmv_source_visualizer`
+
+A dedicated audio spectrum visualizer source for custom scene arrangements:
+
+- Can be placed anywhere in your scene, behind scene cameras, along borders, or behind chat boxes.
+- Captures audio from any active OBS audio source (Desktop Audio, Application Audio Capture, Mic/Aux).
+- Supports vertical bars, organic spline wave, and crest outline modes.
+- Color gradient customizable with manual hex codes or automated album cover synchronization.
+
+---
+
+## 3. OBSMV Now Playing
+
+**Identifier**: `obsmv_source_nowplaying`
+
+A standalone music information card:
+
+- Displays album artwork, song title, artist, album name, and playback progress bar.
+- Supports frosted glassmorphism backgrounds with customizable corner rounding, borders, and transparency.
+- Automatic typography styling with dynamic contrast calculation for dark and light backgrounds.
+- Compatible with all system media players and OSMV companion app sync.
+
+---
+
+## Adding Sources in OBS Studio
+
+1. In the **Sources** dock of OBS Studio, click the **+** (Add) button.
+2. Select one of the three OBSMV options:
+   - **OBSMV (Visualizer + Now Playing)**
+   - **OBSMV Visualizer**
+   - **OBSMV Now Playing**
+3. Configure the source properties in the settings dialog and click **OK**.

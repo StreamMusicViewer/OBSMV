@@ -1,0 +1,48 @@
+# Audio Spectrum Visualizer
+
+OBSMV includes a high-performance audio frequency visualizer designed to react smoothly to game audio, background music, or microphone inputs.
+
+---
+
+## Signal Processing & FFT Engine
+
+The visualizer captures raw audio samples directly from the OBS audio subsystem and applies Fast Fourier Transform processing:
+
+- **Sampling Rate**: Matches the OBS output rate (44.1 kHz or 48 kHz).
+- **FFT Size**: 2048 points with Hann windowing for accurate low-frequency resolution.
+- **Logarithmic Frequency Mapping**: Frequencies are binned along a perceptual logarithmic scale (20 Hz to 20,000 Hz) so bass, midtones, and treble receive balanced representation.
+
+---
+
+## Visualization Styles
+
+### Vertical Bars (`Bars`)
+- Displays distinct vertical spectrum columns.
+- **Bar Count**: Adjustable from 8 to 128 bars.
+- **Bar Gap**: Pixel spacing between adjacent bars.
+- **Bar Corner Radius**: Optional rounding on column top edges.
+
+### Organic Spline Wave (`Wave`)
+- Interpolates FFT frequency bands into a continuous, smooth Catmull-Rom spline curve.
+- Avoids harsh polygonal angles or jagged vertices.
+- Fills the area beneath the spline curve with a smooth vertical color gradient.
+- When placed above or below the Now Playing card with `LayoutGap = 0`, the wave connects flush against the card boundary.
+
+### Luminous Crest Line
+- An optional high-visibility contour line tracing the exact top ridge of the wave or bars.
+- Adjustable thickness and color opacity.
+
+---
+
+## Motion Smoothing & Physics
+
+### Gravity Decay Rate
+Controls how quickly frequency peaks fall back toward zero after an audio transient:
+- Lower values produce longer sustain (floating peaks).
+- Higher values produce rapid, punchy decay.
+
+### Sensitivity Boost
+A non-linear gain multiplier that boosts quiet tracks or compresses louder sections to keep the visualizer active across various audio volumes.
+
+### Inertia Filter
+An exponential moving average filter that eliminates audio jitter without introducing perceptible latency.

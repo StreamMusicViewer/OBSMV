@@ -1,0 +1,42 @@
+# Troubleshooting & FAQ
+
+Answers to common questions and solutions for issues when configuring OBSMV in OBS Studio.
+
+---
+
+## Plugin Not Appearing in OBS Studio
+
+1. **Verify Plugin Location**:
+   - **Windows**: `C:\Program Files\obs-studio\obs-plugins\64bit\obsmv.dll` and `C:\Program Files\obs-studio\data\obs-plugins\obsmv\locale\en-US.ini`
+   - **Linux**: `~/.config/obs-studio/plugins/obsmv/bin/64bit/obsmv.so` and `~/.config/obs-studio/plugins/obsmv/data/`
+   - **macOS**: `~/Library/Application Support/obs-studio/plugins/obsmv/bin/obsmv.so` and `~/Library/Application Support/obs-studio/plugins/obsmv/data/`
+2. **Architecture Mismatch**: Ensure your OBS Studio installation is 64-bit (`x64` or `arm64`). OBSMV does not support 32-bit OBS.
+3. **macOS Gatekeeper**: On macOS, binaries downloaded from GitHub may be quarantined. In Terminal, run:
+   ```bash
+   xattr -cr "$HOME/Library/Application Support/obs-studio/plugins/obsmv"
+   ```
+4. **Inspect OBS Studio Logs**: Go to **Help -> Log Files -> View Current Log** in OBS Studio and search for `obsmv` to check for loading errors or missing dependencies.
+
+---
+
+## Audio Visualizer Does Not Move
+
+1. **Select Correct Audio Source**: In the source properties, make sure **AudioSource** is set to an active output (for example, Desktop Audio or your music player audio source), not an inactive track.
+2. **Audio Volume**: If the music is playing at a very low system volume, increase the **Sensitivity / Boost** slider in properties.
+3. **Muted Source in OBS**: Verify that the audio source is unmuted in the OBS Audio Mixer dock.
+
+---
+
+## Media Information Not Updating
+
+1. **Media Player Compatibility**: Ensure your media player supports system media transport controls:
+   - **Spotify**: Settings -> Display -> "Show desktop overlay when using media keys" (enabled by default).
+   - **Web Browsers (Chrome / Edge / Firefox)**: Hardware media keys and media session handling are enabled by default.
+2. **Switch Mode**: In the source properties under **MediaSourceMode**, switch from **NativeOnly** to **Auto** or **OsmvSync**.
+3. **OSMV Sync**: If using OSMV Sync, confirm that the companion application OSMV is running and `current_song.json` is actively updated in its shared directory.
+
+---
+
+## Text Rendering Issues
+
+OBSMV includes an embedded high-legibility Inter font (`data/fonts/Inter.ttf`) and renders through FreeType 2. If text appears blurred, ensure your OBS canvas scale matches your output resolution and that the source is not downscaled with nearest-neighbor filtering.

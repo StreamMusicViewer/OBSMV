@@ -1,0 +1,50 @@
+# Dynamic Colors & Glassmorphism
+
+OBSMV features an intelligent color extraction engine that adapts its visual theme to the artwork of the currently playing song.
+
+---
+
+## Dual-Tone Palette Extraction
+
+When a new track starts playing, the album artwork is decoded in memory and analyzed using 3D color histogram clustering:
+
+1. **Vibrant Accent Color**:
+   - High-saturation, mid-luminance tones are selected for visualizer crests, frequency peaks, and the playback progress bar.
+2. **Dominant Primary Color**:
+   - Extracted from prevailing background hues, used to ground the base of the visualizer and tint the glassmorphic card.
+
+---
+
+## Photoshop-Style Color Influence
+
+The **Color Influence** slider allows you to blend between manual user-selected colors and automatic album artwork tones:
+
+- **0% (Manual Only)**: Uses exact hex colors chosen in the property dialog.
+- **50% (Hybrid Blend)**: Smoothly blends manual theme colors with album tones.
+- **100% (Fully Dynamic)**: Complete synchronization with the active album cover palette.
+
+---
+
+## Glassmorphism & Theme Modes
+
+OBSMV supports translucent glassmorphism rendering with three theme modes:
+
+### Automatic (`Auto`)
+Analyzes the overall perceived luminance of the album artwork using standard Rec. 601 luma:
+$$Y = 0.299R + 0.587G + 0.114B$$
+- If the cover is dark, it applies the Dark Glass theme with high-contrast white text.
+- If the cover is light, it applies the Frosted Light theme with deep charcoal text.
+
+### Dark Glass
+- Deep smoked glass background with subtle light borders.
+- Crisp white (`#FFFFFF`) titles and light-grey metadata.
+
+### Frosted Light
+- Translucent light frosted glass panel.
+- Deep charcoal (`#141418`) typography meeting WCAG accessibility contrast requirements.
+
+---
+
+## Clean Corner Geometry
+
+Border rendering uses contiguous rounded rectangle shaders. Corners are computed with smooth anti-aliased arcs, preventing overlapping rectangle artifacts or boxy seam lines.

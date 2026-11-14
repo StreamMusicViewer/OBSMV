@@ -1,0 +1,36 @@
+# OBSMV Documentation
+
+OBSMV (OBS Stream Music Viewer Native Plugin) is a high-performance C++20 plugin for OBS Studio. It delivers a hardware-accelerated audio spectrum visualizer and a frosted glass Now Playing music card directly inside the OBS graphics rendering pipeline.
+
+---
+
+## Core Architecture
+
+OBSMV is built from the ground up for low CPU and GPU consumption:
+
+1. **Native Graphics Pipeline**:
+   - Renders directly via `libobs` graphics primitives (`gs_effect`, `gs_vertex_buffer`, `gs_technique`).
+   - Zero CEF (Chromium Embedded Framework) overhead. Unlike browser sources, it does not run web engine processes, DOM layouts, or WebGL layers.
+   - Text rendering is performed using FreeType 2 and custom SDF/linear filtering for sharp typography at any canvas resolution.
+
+2. **Audio Capture and Fast Fourier Transform (FFT)**:
+   - Captures raw audio frames directly from any active OBS audio source using `obs_source_add_audio_capture_callback`.
+   - Processes frequencies using a lightweight KissFFT implementation with Hann windowing.
+   - Dual-mode visualization: vertical frequency bars and continuous organic spline wave.
+
+3. **Hybrid Media Detection**:
+   - Standalone native media extraction via Windows SMTC, Linux D-Bus MPRIS, and macOS.
+   - Real-time synchronization with the companion OSMV desktop application through IPC and file watching.
+
+4. **Dynamic Color Engine**:
+   - Analyzes cover art in real time to extract vibrant accent tones and dominant background colors.
+   - Automatically computes WCAG-compliant contrast ratios for typography and borders.
+   - Supports Photoshop-style color influence blending and dark/light glassmorphism themes.
+
+---
+
+## Key Benefits
+
+- **Performance**: Consumes negligible CPU cycles compared to browser-based widgets.
+- **Portability**: Native binaries available for Windows x64, Linux x86_64, and macOS Apple Silicon/Intel.
+- **Independence**: Works out of the box with native operating system media players, with optional advanced synchronization when paired with OSMV.
