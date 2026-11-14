@@ -3,6 +3,14 @@
 
 namespace obsmv {
 
+#if !defined(_WIN32) && !defined(__linux__)
+// Fallback provider for macOS and other platforms:
+// Native provider returns nullptr and MediaManager seamlessly synchronizes via OSMV Sync
+std::unique_ptr<IMediaProvider> create_native_media_provider() {
+    return nullptr;
+}
+#endif
+
 MediaManager& MediaManager::instance() {
     static MediaManager s_mgr;
     return s_mgr;

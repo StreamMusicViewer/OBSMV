@@ -18,6 +18,8 @@
 #include <windows.h>
 #include <wingdi.h>
 #define strcasecmp _stricmp
+#else
+#include <strings.h>
 #endif
 
 namespace obsmv {
