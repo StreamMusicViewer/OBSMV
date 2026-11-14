@@ -128,13 +128,30 @@ sudo apt update && sudo apt install cmake ninja-build gcc g++ pkg-config libdbus
 ```
 Copy `bin/obsmv.so` to `~/.config/obs-studio/plugins/obsmv/bin/64bit/` and `data/` to `~/.config/obs-studio/plugins/obsmv/data/`.
 
-### macOS (Universal arm64 + x86_64)
+### macOS (Apple Silicon arm64 & Intel x86_64)
+
+#### From Pre-built Release
+1. Download `obsmv-macos-universal.tar.gz` from the latest **[Releases](https://github.com/StreamMusicViewer/OBSMV/releases)** or build artifacts.
+2. Extract the archive and copy the files to your OBS Studio plugin directory:
+   ```bash
+   mkdir -p "$HOME/Library/Application Support/obs-studio/plugins/obsmv/bin"
+   mkdir -p "$HOME/Library/Application Support/obs-studio/plugins/obsmv/data"
+   cp package/obs-plugins/obsmv.so "$HOME/Library/Application Support/obs-studio/plugins/obsmv/bin/"
+   cp -r package/data/obs-plugins/obsmv/* "$HOME/Library/Application Support/obs-studio/plugins/obsmv/data/"
+   ```
+3. If macOS blocks the plugin, remove the quarantine flag:
+   ```bash
+   xattr -cr "$HOME/Library/Application Support/obs-studio/plugins/obsmv"
+   ```
+4. Restart OBS Studio and add the **OBSMV** sources!
+
+#### Building from Source
 ```bash
 brew install ninja simde
 cmake -B macos/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build macos/build -j
 ```
-Copy `macos/build/obsmv.so` to `~/Library/Application Support/obs-studio/plugins/obsmv/bin/`.
+Copy `macos/build/obsmv.so` to `~/Library/Application Support/obs-studio/plugins/obsmv/bin/` and `data/` to `~/Library/Application Support/obs-studio/plugins/obsmv/data/`.
 
 ---
 
