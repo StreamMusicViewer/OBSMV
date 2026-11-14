@@ -1,6 +1,7 @@
 # OBSMV (OBS Stream Music Visualizer)
 
 ![Status](https://img.shields.io/badge/status-active-success)
+![Version](https://img.shields.io/badge/version-v1.0.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-blue)
 ![OBS Studio](https://img.shields.io/badge/OBS%20Studio-30%2B%20%2F%2031%2B%20%2F%2033%2B-black)
 ![C++20](https://img.shields.io/badge/Language-C%2B%2B20-00599C)
@@ -14,33 +15,45 @@
 ### 1. Rendu 100% Interne & Natif dans OBS Studio
 - **Zéro source web (Browser Source)** : Rendu matériel direct via le pipeline graphique OBS (`gs_*`).
 - **Empreinte minimale** : Moins de 1% d'utilisation CPU/GPU, aucune dépendance Chromium.
-- **Typographie nette et vectorielle** : Rasterisation haute fidélité via `stb_truetype` avec support des polices système ou fichiers `.ttf`/`.otf` personnalisés (police moderne *Inter* incluse par défaut).
-- **Pochettes d'album décodées en GPU** : Décodage direct des images (PNG, JPEG) en textures matérielles OBS avec support des coins arrondis et effet vinyle optionnel (rotation fluide en lecture).
+- **Typographie nette et vectorielle** : Rasterisation haute fidélité via `stb_truetype` avec supersampling 2x et gestion des polices système ou fichiers `.ttf`/`.otf` personnalisés.
+- **Sélecteur de polices système intégré** : Choisissez directement n'importe quelle police installée sur votre ordinateur (Segoe UI, Arial, Roboto, Inter, Bahnschrift, etc.) via le sélecteur natif d'OBS.
+- **Pochettes d'album décodées en GPU** : Décodage direct des images en textures matérielles OBS avec support des coins arrondis et effet vinyle optionnel (rotation fluide en lecture).
 
-### 2. Visualiseur Audio Intégré
+### 2. Visualiseur Audio Intégré (KissFFT)
 - **Capture audio temps réel** : Capture directe sur n'importe quelle source audio OBS (audio du bureau, micro, lecteur média, etc.).
-- **Moteur FFT intégré (KissFFT)** : Analyse spectrale FFT embarquée, sans dépendance FFTW3 externe à installer.
+- **Moteur FFT intégré (KissFFT)** : Analyse spectrale FFT embarquée, sans dépendance externe à installer.
 - **4 styles de visualisation** :
-  - **Barres verticales** (classique avec largeur, espacement et hauteur ajustables)
+  - **Barres verticales** (largeur, espacement et hauteur ajustables)
   - **Barres symétriques / centrées** (effet miroir)
-  - **Onde / Oscillogramme** (spectre relié avec dégradé doux)
-  - **Circulaire / Radial** (parfait autour d'une pochette d'album ou vinyle)
+  - **Onde / Oscillogramme** (spline cubique de Catmull-Rom fluide à 12 sous-divisions, parfaitement calée sur la base)
+  - **Circulaire / Radial** (idéal autour d'une pochette ou d'un disque vinyle)
 - **Lissage organique** : Filtre d'inertie type *Monstercat*, gravité et retombée fluide des crêtes.
-- **Couleur dynamique** : Teinte automatiquement les barres du visualiseur avec la **couleur dominante extraite de la pochette d'album** !
+- **Ligne de crête lumineuse** : Contour lumineux suivant précisément la courbe de l'onde.
 
-### 3. Informations Musicales & Carte "Now Playing"
+### 3. Couleur Dynamique Bicolore & Thèmes Dark / Light
+- **Double palette intelligente** :
+  - **Couleur d'accent vive** (pour les crêtes de l'onde, barres de progression et reflets)
+  - **Couleur principale dominante** (pour le fond de carte et la base de l'onde)
+- **Dégradé vertical** : Transition douce entre la couleur d'accent au sommet et la teinte de fond à la base.
+- **Contrôle d'influence (style Photoshop)** : Dosage continu de l'influence de la pochette sur les couleurs personnalisées (de 0% à 100%).
+- **Mode de thème** :
+  - **Automatique (`Auto`)** : Détection de la luminance perçue de l'artwork.
+  - **Sombre (`Dark Glass`)** : Fond verre fumé teinté avec texte blanc pur haute lisibilité.
+  - **Clair (`Frosted Light`)** : Fond dépoli clair avec typographie sombre à fort contraste WCAG.
+- **Bordures nettes** : Rendu des 4 bordures sans aucun artefact de superposition dans les coins.
+
+### 4. Informations Musicales & Carte "Now Playing"
 - **Mode Hybride intelligent** :
-  - **Autonome natif** : Écoute directe des APIs système de transport média (**Windows SMTC**, **Linux D-Bus MPRIS**, **macOS**).
-  - **Synchronisation OSMV** : Compatible avec le daemon [OSMV](https://github.com/streammusicviewer/OSMV) via IPC (`\\.\pipe\osmv-ipc-v3`) ou par lecture directe de `current_song.json`.
+  - **Autonome natif** : Écoute directe des APIs système (**Windows SMTC**, **Linux D-Bus MPRIS**, **macOS**).
+  - **Synchronisation OSMV** : Compatible avec le daemon [OSMV](https://github.com/StreamMusicViewer/OSMV) via IPC (`\\.\pipe\osmv-ipc-v3`) ou par lecture directe de `current_song.json`.
 - **Éléments personnalisables** :
-  - Pochette d'album (carrée, arrondie, ou disque vinyle avec rotation en lecture).
-  - Titre, Artiste, Album avec templates de texte configurables (`{title}`, `{artist}`, `{album}`).
-  - Barre de progression du morceau avec temps écoulé / durée totale (`01:45 / 03:20`).
-  - Carte d'arrière-plan avec style verre fumé (Glassmorphism), couleurs et bordures éditables.
+  - Pochette d'album (carrée, arrondie, ou vinyle rotatif).
+  - Titre, Artiste, Album avec templates configurables (`{title}`, `{artist}`, `{album}`).
+  - Barre de progression avec temps écoulé / durée totale (`01:45 / 03:20`).
+  - Carte d'arrière-plan avec style verre (Glassmorphism), couleurs, opacité et bordures éditables.
 
-### 4. Trois Sources OBS Enregistrées
-Vous pouvez utiliser OBSMV de la manière qui vous convient le mieux dans vos scènes OBS :
-1. **`OBSMV (Visualizer + Now Playing)`** : Source tout-en-un réunissant le visualiseur et la carte de musique (avec choix de disposition : visualiseur au-dessus, en-dessous, et espacement).
+### 5. Trois Sources OBS Enregistrées
+1. **`OBSMV (Visualizer + Now Playing)`** : Source tout-en-un réunissant le visualiseur et la carte de musique (avec disposition au choix : visualiseur en haut ou en bas, espacement ajustable).
 2. **`OBSMV Visualizer`** : Source dédiée au visualiseur audio seul.
 3. **`OBSMV Now Playing`** : Source dédiée à la carte musicale seule.
 
@@ -59,14 +72,21 @@ OBSMV/
 │       └── fr-FR.ini           # Traductions françaises
 ├── deps/
 │   └── libobs/                 # En-têtes et bibliothèque d'import OBS Studio
+├── release/                    # Fichiers prêts pour release GitHub (v1.0.0)
+│   ├── obsmv-v1.0.0-windows-x64.zip
+│   ├── obsmv-v1.0.0-windows-x64.zip.sha256
+│   ├── install-windows.bat
+│   └── RELEASE_NOTES_v1.0.0.md
 ├── src/
 │   ├── obsmv_plugin.cpp        # Point d'entrée du plugin OBS Studio
 │   ├── media/                  # Détection SMTC / MPRIS / OSMV Sync
 │   │   ├── media_detector.cpp
+│   │   ├── media_linux_mpris.cpp
 │   │   ├── media_osmv_sync.cpp
 │   │   └── media_win_smtc.cpp
 │   ├── render/                 # Rendu graphique natif OBS (texte, images, carte)
 │   │   ├── card_renderer.cpp
+│   │   ├── color_utils.hpp
 │   │   ├── image_renderer.cpp
 │   │   └── text_renderer.cpp
 │   ├── source/                 # Implémentation des 3 sources OBS
@@ -79,54 +99,44 @@ OBSMV/
 │       ├── fft_processor.cpp
 │       └── visualizer_renderer.cpp
 ├── windows/
-│   └── build.bat               # Script de compilation 1-clic pour Windows
+│   ├── build.bat               # Script de compilation Windows (Ninja/MSVC)
+│   └── install.bat             # Script d'installation locale dans OBS Studio
 ├── linux/
-│   └── build.sh                # Script de compilation pour Linux
+│   └── build.sh                # Script de compilation Linux
 └── .github/workflows/
-    └── build.yml               # Intégration continue CI multiplateforme (Win, Linux, macOS)
+    └── build.yml               # CI multiplateforme (Win x64, Linux x86_64, macOS Universal)
 ```
 
 ---
 
-## Compilation
+## Installation Rapide
 
-### Windows (Visual Studio 2022/2026 + CMake + Ninja)
-Un script de build automatique est fourni :
-```cmd
-windows\build.bat
-```
-Le fichier binaire `obsmv.dll` sera généré dans `OBSMV\bin\obsmv.dll`.
+### Windows (64-bit)
+1. Rendez-vous sur la page des **[Releases](https://github.com/StreamMusicViewer/OBSMV/releases)** et téléchargez `obsmv-v1.0.0-windows-x64.zip`.
+2. Extrayez l'archive, fermez OBS Studio, et lancez `install.bat`.
+3. Relancez OBS Studio et ajoutez la source **OBSMV** !
 
-### Linux (Ubuntu / Debian / Arch)
+### Linux
 ```bash
 # Dépendances (Ubuntu/Debian)
-sudo apt update && sudo apt install cmake ninja-build gcc g++ pkg-config libdbus-1-dev libobs-dev
+sudo apt update && sudo apt install cmake ninja-build gcc g++ pkg-config libdbus-1-dev
 
 # Compilation
 ./linux/build.sh
 ```
-Le binaire `obsmv.so` sera généré dans `OBSMV/bin/obsmv.so`.
+Copiez `bin/obsmv.so` vers `~/.config/obs-studio/plugins/obsmv/bin/64bit/` et `data/` vers `~/.config/obs-studio/plugins/obsmv/data/`.
 
-### macOS
+### macOS (Universal arm64 + x86_64)
 ```bash
-cmake -B macos/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+brew install ninja simde
+cmake -B macos/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build macos/build -j
 ```
-
----
-
-## Installation dans OBS Studio
-
-1. **Copiez le binaire du plugin** :
-   - **Windows** : Copiez `bin\obsmv.dll` vers `C:\Program Files\obs-studio\obs-plugins\64bit\`
-   - **Linux** : Copiez `bin/obsmv.so` vers `~/.config/obs-studio/plugins/obsmv/bin/64bit/`
-   - **macOS** : Copiez `bin/obsmv.so` vers `~/Library/Application Support/obs-studio/plugins/obsmv/bin/`
-2. **Copiez les données (traductions & polices)** :
-   - Copiez le dossier `data/` dans le répertoire de données du plugin OBS (ex. `C:\Program Files\obs-studio\data\obs-plugins\obsmv\`).
-3. Lancez OBS Studio : ajoutez une source **OBSMV** dans votre scène !
+Copiez `macos/build/obsmv.so` vers `~/Library/Application Support/obs-studio/plugins/obsmv/bin/`.
 
 ---
 
 ## Licence
 
 Distribué sous licence GNU General Public License v3.0 (GPL-3.0) — Voir [LICENSE](LICENSE) pour plus de détails.
+Développé par [@Ulyxx3](https://github.com/Ulyxx3) pour l'organisation [StreamMusicViewer](https://github.com/StreamMusicViewer).
