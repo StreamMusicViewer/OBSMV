@@ -4,6 +4,7 @@
 #include <dbus/dbus.h>
 #include <vector>
 #include <fstream>
+#include <cstring>
 
 namespace obsmv {
 
