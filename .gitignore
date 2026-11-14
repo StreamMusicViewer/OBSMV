@@ -1,0 +1,34 @@
+# Build directories
+build/
+build_*/
+windows/build/
+linux/build/
+bin/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.dir/
+
+# MSVC / IDE artifacts
+*.obj
+*.exp
+*.ilk
+*.pdb
+*.suo
+*.user
+.vs/
+.vscode/
+.clangd/
+compile_commands.json
+
+# Generated binaries
+*.dll
+*.so
+*.dylib
+*.node
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
