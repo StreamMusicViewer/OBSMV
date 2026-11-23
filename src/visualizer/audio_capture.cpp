@@ -14,8 +14,8 @@ static void audio_capture_cb(void* param, obs_source_t* src, const struct audio_
 }
 
 AudioCapture::AudioCapture() {
-    circlebuf_init(&audio_circle_[0]);
-    circlebuf_init(&audio_circle_[1]);
+    deque_init(&audio_circle_[0]);
+    deque_init(&audio_circle_[1]);
 
     obs_audio_info ai{};
     if (obs_get_audio_info(&ai)) {
@@ -25,8 +25,8 @@ AudioCapture::AudioCapture() {
 
 AudioCapture::~AudioCapture() {
     release_source();
-    circlebuf_free(&audio_circle_[0]);
-    circlebuf_free(&audio_circle_[1]);
+    deque_free(&audio_circle_[0]);
+    deque_free(&audio_circle_[1]);
 }
 
 void AudioCapture::release_source() {
@@ -62,10 +62,10 @@ void AudioCapture::set_source(const std::string& name) {
 
     try_connect_source();
 
-    circlebuf_free(&audio_circle_[0]);
-    circlebuf_free(&audio_circle_[1]);
-    circlebuf_init(&audio_circle_[0]);
-    circlebuf_init(&audio_circle_[1]);
+    deque_free(&audio_circle_[0]);
+    deque_free(&audio_circle_[1]);
+    deque_init(&audio_circle_[0]);
+    deque_init(&audio_circle_[1]);
 }
 
 std::string AudioCapture::get_source() const {
@@ -92,15 +92,15 @@ void AudioCapture::on_audio_data(obs_source_t*, const struct audio_data* data, b
 
     size_t write_bytes = data->frames * sizeof(float);
     if (muted) {
-        circlebuf_push_back_zero(&audio_circle_[0], write_bytes);
-        circlebuf_push_back_zero(&audio_circle_[1], write_bytes);
+        deque_push_back_zero(&audio_circle_[0], write_bytes);
+        deque_push_back_zero(&audio_circle_[1], write_bytes);
     } else {
-        circlebuf_push_back(&audio_circle_[0], data->data[0], write_bytes);
+        deque_push_back(&audio_circle_[0], data->data[0], write_bytes);
         if (data->data[1]) {
-            circlebuf_push_back(&audio_circle_[1], data->data[1], write_bytes);
+            deque_push_back(&audio_circle_[1], data->data[1], write_bytes);
         } else {
             // Mono duplicate
-            circlebuf_push_back(&audio_circle_[1], data->data[0], write_bytes);
+            deque_push_back(&audio_circle_[1], data->data[0], write_bytes);
         }
     }
 
@@ -108,8 +108,8 @@ void AudioCapture::on_audio_data(obs_source_t*, const struct audio_data* data, b
     const size_t max_bytes = 8192 * sizeof(float);
     if (audio_circle_[0].size > max_bytes) {
         size_t excess = audio_circle_[0].size - max_bytes;
-        circlebuf_pop_front(&audio_circle_[0], nullptr, excess);
-        circlebuf_pop_front(&audio_circle_[1], nullptr, excess);
+        deque_pop_front(&audio_circle_[0], nullptr, excess);
+        deque_pop_front(&audio_circle_[1], nullptr, excess);
     }
 }
 
@@ -131,26 +131,26 @@ bool AudioCapture::fetch_samples(std::vector<float>& left_channel,
         size_t available_samples = available_bytes / sizeof(float);
         size_t offset = sample_count - available_samples;
 
-        circlebuf_peek_front(&audio_circle_[0], left_channel.data() + offset, available_bytes);
-        circlebuf_peek_front(&audio_circle_[1], right_channel.data() + offset, available_bytes);
+        deque_peek_front(&audio_circle_[0], left_channel.data() + offset, available_bytes);
+        deque_peek_front(&audio_circle_[1], right_channel.data() + offset, available_bytes);
 
-        circlebuf_pop_front(&audio_circle_[0], nullptr, available_bytes);
-        circlebuf_pop_front(&audio_circle_[1], nullptr, available_bytes);
+        deque_pop_front(&audio_circle_[0], nullptr, available_bytes);
+        deque_pop_front(&audio_circle_[1], nullptr, available_bytes);
     } else {
         // Discard ancient samples beyond the sample window so we always read real-time audio
         if (audio_circle_[0].size > bytes_needed * 2) {
             size_t excess = audio_circle_[0].size - bytes_needed * 2;
-            circlebuf_pop_front(&audio_circle_[0], nullptr, excess);
-            circlebuf_pop_front(&audio_circle_[1], nullptr, excess);
+            deque_pop_front(&audio_circle_[0], nullptr, excess);
+            deque_pop_front(&audio_circle_[1], nullptr, excess);
         }
 
-        circlebuf_peek_front(&audio_circle_[0], left_channel.data(), bytes_needed);
-        circlebuf_peek_front(&audio_circle_[1], right_channel.data(), bytes_needed);
+        deque_peek_front(&audio_circle_[0], left_channel.data(), bytes_needed);
+        deque_peek_front(&audio_circle_[1], right_channel.data(), bytes_needed);
 
         // Advance by ~800 samples (1 video frame at 48kHz / 60 FPS) for smooth streaming
         size_t advance = std::min(bytes_needed / 2, audio_circle_[0].size);
-        circlebuf_pop_front(&audio_circle_[0], nullptr, advance);
-        circlebuf_pop_front(&audio_circle_[1], nullptr, advance);
+        deque_pop_front(&audio_circle_[0], nullptr, advance);
+        deque_pop_front(&audio_circle_[1], nullptr, advance);
     }
 
     return true;
