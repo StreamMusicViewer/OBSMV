@@ -1,7 +1,7 @@
 #pragma once
 
 #include <obs-module.h>
-#include <util/circlebuf.h>
+#include <util/deque.h>
 #include <string>
 #include <vector>
 #include <mutex>
@@ -35,7 +35,7 @@ private:
     obs_weak_source_t* weak_source_{nullptr};
 
     std::mutex audio_mutex_;
-    circlebuf audio_circle_[2]{};
+    struct deque audio_circle_[2]{};
     uint32_t sample_rate_{48000};
     uint64_t last_check_time_{0};
 };
